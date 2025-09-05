@@ -1,0 +1,24 @@
+# Use Python 3.11 to keep audioop available for discord.py
+FROM python:3.11-slim
+
+# Optional: nicer signal handling
+RUN apt-get update && apt-get install -y --no-install-recommends tini ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Install Python deps
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy your app
+COPY . .
+
+# Render sets PORT; we’ll expose a default in case
+ENV PORT=10000
+
+# Use tini as init (optional but good)
+ENTRYPOINT ["/usr/bin/tini","--"]
+
+# Start your bot
+CMD ["python","-u","bot.py"]
