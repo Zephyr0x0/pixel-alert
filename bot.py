@@ -12,7 +12,7 @@ import discord
 from discord.ext import commands, tasks
 from discord import app_commands
 
-# ----------------- Token via environment variable -----------------
+# ----------------- Token via environment variable -----------------test
 import os, sys
 
 raw = os.getenv("DISCORD_TOKEN")
