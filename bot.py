@@ -13,8 +13,21 @@ from discord.ext import commands, tasks
 from discord import app_commands
 
 # ----------------- Token via environment variable -----------------
-import os
-TOKEN = os.getenv("DISCORD_TOKEN")  # never hardcode tokens
+import os, sys
+
+raw = os.getenv("DISCORD_TOKEN")
+if not raw:
+    raise SystemExit("Set DISCORD_TOKEN environment variable before running.")
+
+raw = raw.strip()
+if raw.lower().startswith("bot "):   # people paste "Bot abc..."
+    raw = raw[4:].strip()
+
+# Bot tokens have 3 parts separated by dots
+if raw.count(".") != 2 or len(raw) < 50:
+    raise SystemExit("DISCORD_TOKEN looks wrong. Re-copy it from Developer Portal → Bot tab.")
+
+TOKEN = raw
 
 DATA_FILE = Path("timers.json")
 CONFIG_FILE = Path("config.json")
