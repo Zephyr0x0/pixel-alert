@@ -29,6 +29,15 @@ if raw.count(".") != 2 or len(raw) < 50:
 
 TOKEN = raw
 
+import threading, os as _os, http.server, socketserver
+def _run_keepalive():
+    port = int(_os.getenv("PORT", "10000"))  # Render sets PORT
+    Handler = http.server.SimpleHTTPRequestHandler
+    with socketserver.TCPServer(("", port), Handler) as httpd:
+        httpd.serve_forever()
+if _os.getenv("PORT"):
+    threading.Thread(target=_run_keepalive, daemon=True).start()
+
 DATA_FILE = Path("timers.json")
 CONFIG_FILE = Path("config.json")
 
